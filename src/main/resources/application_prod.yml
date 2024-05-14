@@ -1,0 +1,20 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+
+
+
+build:
+  version: "1.0"
+
+
+cards:
+  message: "Welcome to my cards microservice prod REST API"
+  contactDetails:
+    name: "Sammy Younis - Java Developer"
+    email: "sam.younis.sy@gmail.com"
+  onCallSupport:
+    - 00962797916142
+    - 00962797934672

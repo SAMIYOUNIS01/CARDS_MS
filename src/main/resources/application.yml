@@ -15,3 +15,24 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  config:
+    import:
+      - "application_qa.yml"
+      - "application_prod.yml"
+  profiles:
+    active:
+      - "qa"
+
+
+build:
+  version: "3.0"
+
+
+cards:
+  message: "Welcome to my cards microservice local REST API"
+  contactDetails:
+    name: "sameer nassri - Java Developer"
+    email: "sameer nassri@gmail.com"
+  onCallSupport:
+    - 00962798397433
+    - 00962298428329

@@ -3,6 +3,7 @@ package com.microservices.cards.controller;
 import com.microservices.cards.constants.CardsConstants;
 import com.microservices.cards.model.dto.CardsDto;
 import com.microservices.cards.model.dto.ErrorResponseDto;
+import com.microservices.cards.model.dto.CardsContactDetailsDto;
 import com.microservices.cards.model.dto.ResponseDto;
 import com.microservices.cards.service.ICardsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,26 +14,35 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.DocFlavor;
-import javax.swing.*;
-
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-@AllArgsConstructor
 @Tag(
         name = "CRUD REST APIs for Cards in bank",
         description = "Create , Update , Read , Delete (Operations)"
 )
 public class CardsController {
 
-    ICardsService iCardsService;
+    private final ICardsService iCardsService;
 
+    public CardsController(ICardsService iCardsService){
+        this.iCardsService = iCardsService;
+    }
+
+    @Autowired
+    private Environment environment;
+    @Autowired
+    CardsContactDetailsDto loansContactDetailsDto;
+
+    @Value("${build.version}")
+    private String buildVersion;
     @Operation(
             summary = "Create Cards REST API",
             description = "Create new Cards inside bank"
@@ -185,4 +195,79 @@ public class CardsController {
         );
 
     }
+    @Operation(
+            summary = "Get Build Version REST API",
+            description = "REST API to get build version for cards microservice"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP STATUS OK"
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "HTTP STATUS INTERNAL SERVER ERROR",
+            content = @Content(
+                    schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+    )
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildVersion(){
+        return ResponseEntity
+                .status(
+                        HttpStatus.OK
+                ).body(
+                        buildVersion
+                );
+    }
+
+
+
+    @Operation(
+            summary = "Get Java Version REST API",
+            description = "REST API to get java version for cards microservice"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP STATUS OK"
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "HTTP STATUS INTERNAL SERVER ERROR",
+            content = @Content(
+                    schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+    )
+    @GetMapping("/java-version")
+    public ResponseEntity<String> getJavaVersion(){
+        return ResponseEntity
+                .status(
+                        HttpStatus.OK
+                ).body(
+                        environment.getProperty("JAVA_HOME")
+                );
+    }
+    @Operation(
+            summary = "Get Contact Information REST API",
+            description = "REST API to get contact information for cards microservice"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP STATUS OK"
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "HTTP STATUS INTERNAL SERVER ERROR",
+            content = @Content(
+                    schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<CardsContactDetailsDto> getContactDetails(){
+        return ResponseEntity.status(
+                HttpStatus.OK
+        ).body(
+                loansContactDetailsDto
+        );
+    }
+
 }
