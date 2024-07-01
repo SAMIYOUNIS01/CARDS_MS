@@ -20,9 +20,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Validated
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(
         name = "CRUD REST APIs for Cards in bank",
